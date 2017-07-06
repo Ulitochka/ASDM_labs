@@ -3,6 +3,7 @@ import os
 
 from keras.models import *
 from keras.callbacks import *
+from keras import backend as K
 
 
 file_path = os.path.split(os.path.abspath(__file__))[0]
@@ -31,3 +32,10 @@ binary_crossentropy, binary_accuracy = model.evaluate(data["x_test"],
 
 print('Test binary_crossentropy:', binary_crossentropy)
 print('Test binary_accuracy:', binary_accuracy)
+
+"""
+Test binary_crossentropy: 0.469139611721
+Test binary_accuracy: 0.793999999046
+
+
+"""

@@ -1,14 +1,15 @@
 import pickle
 import os
 
+import numpy
+numpy.random.seed(1024)
+
 from keras.optimizers import *
 from keras.models import *
 from keras.layers import *
 from keras.callbacks import *
 import tensorflow as tf
 from keras import backend as K
-import numpy
-
 
 file_path = os.path.split(os.path.abspath(__file__))[0]
 
@@ -26,22 +27,24 @@ data = {
 
 ########################################################################################################################
 
-LSTM_UNITS = 32
+print(data["x_train"].shape)
+
+LSTM_UNITS = 128
 OUTPUT_UNITS = 1
-RANDOM_EMBEDDING_SIZE = 64
+RANDOM_EMBEDDING_SIZE = 128
 MAX_SENT_LENGTH = 300
-MAX_WORDS = 1000
+MAX_WORDS = 20000
 
 input_sequence = Input((MAX_SENT_LENGTH,))
 model = Sequential()
 model.add(Embedding(
     input_dim=MAX_WORDS,
-    output_dim=64,
+    output_dim=RANDOM_EMBEDDING_SIZE,
     input_length=MAX_SENT_LENGTH,
     mask_zero=True,
     trainable=True))
-model.add(LSTM(LSTM_UNITS, return_sequences=True))
-model.add(LSTM(LSTM_UNITS))
+model.add(LSTM(LSTM_UNITS, dropout=0.2, recurrent_dropout=0.2)) #, return_sequences=True))
+# model.add(LSTM(LSTM_UNITS, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dropout(0.9))
 model.add(Dense(OUTPUT_UNITS, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['binary_accuracy'])
@@ -49,9 +52,8 @@ print(model.summary())
 
 ########################################################################################################################
 
-BATCH_SIZE = 32
-EPOCH = 10
-
+BATCH_SIZE = 500
+EPOCH = 15
 
 model_checkpoint = ModelCheckpoint(filepath=os.path.abspath(file_path + '/../models/rnn_model_best.pkl'),
                                    monitor='val_loss',

@@ -13,7 +13,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 
 
-MAX_WORDS = 1000
+MAX_WORDS = 20000
 MAX_SENT_LENGTH = 300
 tokenizer = Tokenizer(num_words=MAX_WORDS)
 
